@@ -1,90 +1,78 @@
-let operador = document.getElementsByClassName("operador");
-let numero = document.getElementsByClassName("numero");
-
-function obtenerHistorial(){
-    return document.getElementById("valor-historial").innerText;
+function getHistory(){
+    return document.getElementById("history-value").innerText;
 }
-
-function imprimirHistorial(num){
-    document.getElementById("valor-historial").innerText=num;
+function printHistory(num){
+    document.getElementById("history-value").innerText=num;
 }
-
-function obtenerSalida(){
-    return document.getElementById("valor-salida").innerText;
+function getOutput(){
+    return document.getElementById("output-value").innerText;
 }
-
-function imprimirSalida(num){
+function printOutput(num){
     if(num==""){
-    document.getElementById("valor-salida").innerText=num;
+        document.getElementById("output-value").innerText=num;
     }
     else{
-        document.getElementById("valor-salida").innerText=obtenerNumeroFormateado(num);
-    }
+        document.getElementById("output-value").innerText=getFormattedNumber(num);
+    }	
 }
-
-function obtenerNumeroFormateado(num){
+function getFormattedNumber(num){
     if(num=="-"){
         return "";
     }
-    let n=Number(num);
-    let value= n.toLocaleString("en");
-
+    var n = Number(num);
+    var value = n.toLocaleString("en");
     return value;
 }
-
-function revertirFormatoNumero(num){
-    return Number(num.replace(/,/g, ''));
+function reverseNumberFormat(num){
+    return Number(num.replace(/,/g,''));
 }
-
-
-
-for(let i=0;i<operador.length;i++){
-    operador[i].addEventListener('click',function(){
-            if(this.id=="clear"){
-                imprimirHistorial("");
-                imprimirSalida("");
-            }else if(this.id=="backspace"){
-                let
-                salida=revertirFormatoNumero(obtenerSalida()).toString();
-                if(salida){// Si (salida tiene un valor) {...}
-                    salida= salida.substr(0,salida.length-1);
-                imprimirSalida(salida);
-                }
-            }else{
-                let salida = obtenerSalida();
-                let historial = obtenerHistorial();
-
-                if(salida=="" && historial != ""){
-                    if(isNaN(historial[historial.length-1])){
-                        historial=historial.substr(0,historial.length-1);
-                    }
-                }
-
-                if(salida != "" || historial != ""){
-                    salida= salida==""?
-                    salida:revertirFormatoNumero(salida);
-                    historial=historial+salida;
-
-                    if(this.id=="="){
-                        let result= eval(historial);
-                        imprimirSalida(result);
-                        imprimirHistorial("");
-                    }else{
-                        historial=historial+this.id;
-                        imprimirHistorial(historial);
-                        imprimirSalida("");
-                    }
+var operator = document.getElementsByClassName("operator");
+for(var i =0;i<operator.length;i++){
+    operator[i].addEventListener('click',function(){
+        if(this.id=="clear"){
+            printHistory("");
+            printOutput("");
+        }
+        else if(this.id=="backspace"){
+            var output=reverseNumberFormat(getOutput()).toString();
+            if(output){//if output has a value
+                output= output.substr(0,output.length-1);
+                printOutput(output);
+            }
+        }
+        else{
+            var output=getOutput();
+            var history=getHistory();
+            if(output==""&&history!=""){
+                if(isNaN(history[history.length-1])){
+                    history= history.substr(0,history.length-1);
                 }
             }
+            if(output!="" || history!=""){
+                output= output==""?output:reverseNumberFormat(output);
+                history=history+output;
+                if(this.id=="="){
+                    var result=eval(history);
+                    printOutput(result);
+                    printHistory("");
+                }
+                else{
+                    history=history+this.id;
+                    printHistory(history);
+                    printOutput("");
+                }
+            }
+        }
+        
     });
 }
-
-for(let i=0;i<numero.length;i++){
-    numero[i].addEventListener('click', function(){
-        let salida = revertirFormatoNumero(obtenerSalida());
-        if(salida!=NaN){
-            salida=salida+this.id;
-            imprimirSalida(salida);
+var number = document.getElementsByClassName("number");
+for(var i =0;i<number.length;i++){
+    number[i].addEventListener('click',function(){
+        var output=reverseNumberFormat(getOutput());
+        if(output!=NaN){ //if output is a number
+            output=output+this.id;
+            printOutput(output);
         }
     });
 }
